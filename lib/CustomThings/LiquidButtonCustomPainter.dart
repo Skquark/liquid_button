@@ -14,14 +14,14 @@ class LiquidButtonCustomPainter extends CustomPainter {
   final double tension;
 
   LiquidButtonCustomPainter(
-      {@required this.expandFactor,
-      @required this.position,
-      @required this.gap,
-      @required this.tension,
-      @required this.maxExpansion,
-      @required this.canvasColor,
-      @required this.gradientColor,
-      @required this.retainGradient});
+      {required this.expandFactor,
+      required this.position,
+      required this.gap,
+      required this.tension,
+      required this.maxExpansion,
+      required this.canvasColor,
+      required this.gradientColor,
+      required this.retainGradient});
 
   @override
   void paint(Canvas canvas, Size size) {

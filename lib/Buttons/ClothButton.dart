@@ -8,22 +8,12 @@ class ClothButton extends StatefulWidget {
   final double height;
   final double width;
   final Color backgroundColor;
-  final Color gradientColor;
+  final Color? gradientColor;
   final bool retainGradient;
   final Duration duration;
   final double expandFactor;
 
-  ClothButton(
-      {Key key,
-      @required this.height,
-      @required this.width,
-        this.duration = const Duration(milliseconds: 500),
-      this.child,
-        @required this.backgroundColor,
-        this.expandFactor = 10.0,
-        this.gradientColor,
-        this.retainGradient = false})
-      : super(key: key) {
+  ClothButton({Key? key, required this.height, required this.width, this.duration = const Duration(milliseconds: 500), required this.child, required this.backgroundColor, this.expandFactor = 10.0, this.gradientColor, this.retainGradient = false}) : super(key: key) {
     assert(expandFactor > 1.0 || expandFactor < 50.0);
   }
 
@@ -31,33 +21,30 @@ class ClothButton extends StatefulWidget {
   _ClothButtonState createState() => _ClothButtonState();
 }
 
-class _ClothButtonState extends State<ClothButton>
-    with TickerProviderStateMixin {
-  Offset position;
-  Animation<double> animation;
-  AnimationController animationController;
+class _ClothButtonState extends State<ClothButton> with TickerProviderStateMixin {
+  Offset? position;
+  late Animation<double> animation;
+  late AnimationController animationController;
 
   @override
   void initState() {
     position = Offset(widget.width / 2, widget.height / 2);
-    animationController =
-    new AnimationController(duration: widget.duration, vsync: this);
-    animation = new Tween<double>(begin: 1.0, end: widget.expandFactor)
-        .animate(animationController)
-          ..addListener(() {
-            setState(() {});
-          });
+    animationController = new AnimationController(duration: widget.duration, vsync: this);
+    animation = new Tween<double>(begin: 1.0, end: widget.expandFactor).animate(animationController)
+      ..addListener(() {
+        setState(() {});
+      });
 
     animationController.forward(from: 0.0);
 
     super.initState();
   }
 
-  RenderBox renderBox;
+  RenderBox? renderBox;
 
   @override
   Widget build(BuildContext context) {
-    renderBox = context.findRenderObject();
+    renderBox = context.findRenderObject() as RenderBox?;
 
     if (!kIsWeb)
       return GestureDetector(
@@ -68,13 +55,7 @@ class _ClothButtonState extends State<ClothButton>
           height: widget.height,
           width: widget.width,
           child: CustomPaint(
-            painter: ClothCustomPainter(
-                relativePosition: position,
-                expandFactor: animation.value,
-                backgroundColor: widget.backgroundColor,
-                maxExpand: widget.expandFactor,
-                retainGradient: widget.retainGradient,
-                gradientColor: widget.gradientColor ?? widget.backgroundColor),
+            painter: ClothCustomPainter(relativePosition: position, expandFactor: animation.value, backgroundColor: widget.backgroundColor, maxExpand: widget.expandFactor, retainGradient: widget.retainGradient, gradientColor: widget.gradientColor ?? widget.backgroundColor),
             child: Center(child: widget.child),
           ),
         ),
@@ -88,13 +69,7 @@ class _ClothButtonState extends State<ClothButton>
           height: widget.height,
           width: widget.width,
           child: CustomPaint(
-            painter: ClothCustomPainter(
-                relativePosition: position,
-                expandFactor: animation.value,
-                backgroundColor: widget.backgroundColor,
-                maxExpand: widget.expandFactor,
-                retainGradient: widget.retainGradient,
-                gradientColor: widget.gradientColor ?? widget.backgroundColor),
+            painter: ClothCustomPainter(relativePosition: position, expandFactor: animation.value, backgroundColor: widget.backgroundColor, maxExpand: widget.expandFactor, retainGradient: widget.retainGradient, gradientColor: widget.gradientColor ?? widget.backgroundColor),
             child: Center(child: widget.child),
           ),
         ),
@@ -103,7 +78,7 @@ class _ClothButtonState extends State<ClothButton>
 
   void onHover(PointerHoverEvent event) {
     setState(() {
-      position = renderBox.globalToLocal(event.position);
+      position = renderBox!.globalToLocal(event.position);
     });
   }
 
@@ -113,11 +88,11 @@ class _ClothButtonState extends State<ClothButton>
     });
   }
 
-  void onEnter(PointerEnterEvent event) {
+  void onEnter(PointerEnterEvent? event) {
     animationController.reverse(from: widget.expandFactor);
   }
 
-  void onExit(PointerExitEvent event) {
+  void onExit(PointerExitEvent? event) {
     animationController.forward(from: 0.0);
   }
 }
